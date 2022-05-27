@@ -20,7 +20,7 @@
 #include <linux/module.h>
 #include <linux/pci.h>
 
-#define TS7800V2_NR_DIO	    118
+#define TS7800V2_NR_DIO	   120 
 #define TS7800V2_DIO_BASE  64
 
 struct ts7800v2_gpio_priv {
@@ -173,6 +173,9 @@ static unsigned int dio_bitpositions[] = {
 
 	21, // 116 EN_WIFI_PWR
 	22, // 117 WIFI_RESET
+
+	30, // 118 Green LED Register 0x8
+	20, // 119 Red LED   Register 0xC
 };
 
 static inline struct ts7800v2_gpio_priv *to_gpio_ts7800v2(struct gpio_chip *chip)
@@ -291,6 +294,10 @@ static int ts7800v2_gpio_direction_output(struct gpio_chip *chip,
 		reg_num = 0x1C;
 	} else if (offset < 118)  { /* WIFI control bits, nothing to do */
 		reg_num = 0x0C;
+	} else if (offset == 118) { /* Green LED */
+		reg_num = 0x08;
+	} else if (offset == 119) { /* Red LED */
+		reg_num = 0x0C;
 	} else {
 		spin_unlock_irqrestore(&priv->lock, flags);
 		return -EINVAL;
@@ -366,6 +373,10 @@ static void ts7800v2_gpio_set(struct gpio_chip *chip, unsigned int offset,
 	} else if (offset < 116) { /* pc/104 Row D */
 		reg_num = 0x1C;
 	}  else if (offset < 118)  { /* WIFI control bits */
+		reg_num = 0x0C;
+	} else if (offset == 118 ) { /* Green LED */
+		reg_num = 0x08;
+	} else if (offset == 119 ) { /* Red LED */
 		reg_num = 0x0C;
 	} else {
 		spin_unlock_irqrestore(&priv->lock, flags);

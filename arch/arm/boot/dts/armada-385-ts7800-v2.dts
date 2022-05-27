@@ -39,23 +39,22 @@
 		reg = <0x00000000 0x40000000>; /* 1GB */
 	};
 
-	/*
 	leds {
 		compatible = "gpio-leds";
+		status = "okay";
 
 		green-led {
 			label = "green-led";
-			gpios = <&gpio0 19 GPIO_ACTIVE_LOW>;
+			gpios = <&ts7800v2_gpio 118 GPIO_ACTIVE_LOW>;
 			linux,default-trigger = "heartbeat";
 		};
 
 		red-led {
 			label = "red-led";
-			gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
+			gpios = <&ts7800v2_gpio 119 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
 	};
-	*/
 
 	soc {
 		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
@@ -70,6 +69,11 @@
 				status = "disabled";
 			};
 		};
+	};
+	
+	accelerometer: mma8450@1c {
+        	compatible = "fsl,mma8451";
+        	reg = <28>;
 	};
 
 	isa16550:  isa16550 { /* drivers/tty/serial/8250/ts7800_isa16550.c */
@@ -530,14 +534,14 @@
 	};
 
 	wilc_spi@3 {   /* WILC3000 module, SPI_0_WIFI_CS2#, MPP[27] = native cs[3]*/
-		compatible = "microchip,wilc3000","microchip,wilc1000";
-		reg = <3>;
-		spi-max-frequency = <20000000>;
-		//reset-gpios = <&ts7800v2_gpio 117 GPIO_ACTIVE_HIGH>;     /* WIFI_RESET#  */
-		//chip_en-gpios = <&ts7800v2_gpio 116 GPIO_ACTIVE_HIGH>;   /* EN_WIFI_PWR */
-		interrupt-parent = <&gpio0>;
-		interrupts = <18 GPIO_ACTIVE_HIGH>;
-		status = "okay";
+               compatible = "microchip,wilc3000", "microchip,wilc1000";
+               reg = <3>;
+               spi-max-frequency = <20000000>;
+               reset-gpios = <&ts7800v2_gpio 117 GPIO_ACTIVE_HIGH>;   /* WIFI_RESET# */
+               chip_en-gpios = <&ts7800v2_gpio 116 GPIO_ACTIVE_HIGH>; /* EN_WIFI_PWR */
+               interrupt-parent = <&gpio0>;
+               interrupts = <18 GPIO_ACTIVE_HIGH>;
+               status = "okay";
 	 };
 };
 
@@ -565,6 +569,7 @@
 	status = "okay";
 };
 
+/*
 &gpio0 {
 	status = "okay";
 
@@ -579,5 +584,5 @@
 		output-high;
 		line-name = "en-usb-host-5v";
 	};
-
 };
+*/
