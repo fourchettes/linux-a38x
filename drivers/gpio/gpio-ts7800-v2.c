@@ -44,7 +44,7 @@ struct ts7800v2_gpio_priv {
  * Also, the EN_WIFI_PWR and WIFI_RESET lines on the TS-7800-V2 are
  *  controlled by this driver.
  *
- * Map of DIO[0] through DIO[117].
+ * Map of DIO[0] through DIO[120].
  * DIO number : bit position in relevant syscon reg or regs.
  */
 
@@ -176,6 +176,8 @@ static unsigned int dio_bitpositions[] = {
 
 	30, // 118 Green LED Register 0x8
 	20, // 119 Red LED   Register 0xC
+
+	31  // 120 CPU_ACCESS_FPGA_FLASH# 0x8
 };
 
 static inline struct ts7800v2_gpio_priv *to_gpio_ts7800v2(struct gpio_chip *chip)
@@ -378,6 +380,8 @@ static void ts7800v2_gpio_set(struct gpio_chip *chip, unsigned int offset,
 		reg_num = 0x08;
 	} else if (offset == 119 ) { /* Red LED */
 		reg_num = 0x0C;
+	} else if (offset == 120 ) { /* CPU_ACCESS_FPGA_FLASH# */
+		reg_num = 0x08;
 	} else {
 		spin_unlock_irqrestore(&priv->lock, flags);
 		return;
